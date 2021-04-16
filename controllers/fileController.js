@@ -30,7 +30,9 @@ class FileController{
     async getFiles(req, res) {
         try {
             const {sort} = req.query;
-            let files
+            let files;
+            let parent = await File.find({_id: req.query.parent});
+
             switch (sort){
                 case 'name':
                     files = await File.find({user: req.user.id, parent: req.query.parent}).sort({name:1});
@@ -45,8 +47,12 @@ class FileController{
                     files = await File.find({user: req.user.id, parent: req.query.parent});
                     break;
             }
+            let response = {
+                files,
+                parent
+            }
             
-            return res.json(files);
+            return res.json(response);
         } catch (e) {
             console.log(e);
             return res.status(500).json({message: "Не удалось получить файлы"})
