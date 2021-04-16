@@ -2,5 +2,6 @@
     "serverPort": 5000,
     "dbUrl": "mongodb+srv://Zhantore:inju13032011gg@cluster0.o0ko3.mongodb.net/cloud-disk?retryWrites=true&w=majority",
     "secretKey": "mern-secret-key-qwerty",
-    "filePath": "D:\\Жаника - важное\\Портфолио полное\\Cloud-disk\\server\\files"
+    "filePath": "D:\\Жаника - важное\\Портфолио полное\\Cloud-disk\\server\\files",
+    "staticPath": "D:\\Жаника - важное\\Портфолио полное\\Cloud-disk\\server\\static"
 }
