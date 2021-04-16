@@ -139,6 +139,18 @@ class FileController{
             return res.status(400).json({message: 'Директория не пуста'});
         }
     }
+
+    async searchFile(req, res) {
+        try {
+            const searchName = req.query.search;
+            let files = await File.find({user: req.user.id});
+            files = files.filter(file => file.name.includes(searchName));
+            return res.json(files);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({message: 'Ошибка поиска'});
+        }
+    }
 }
 
 module.exports = new FileController();
