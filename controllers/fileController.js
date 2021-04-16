@@ -63,23 +63,24 @@ class FileController{
             file.mv(path);
 
             const type = file.name.split('.').pop();
-
+            let filePath = file.name;
             let dbFile;
             if(parent){
+                filePath = parent.path + "\\" + file.name;
                 dbFile = new File({
                     name: file.name,
                     type,
                     size: file.size,
-                    path: parent.path,
+                    path: filePath,
                     parent: parent._id,
                     user: user._id
                 });
-            }
-            else{
+            }else{
                 dbFile = new File({
                     name: file.name,
                     type,
                     size: file.size,
+                    path: filePath,
                     user: user._id
                 });
             }
@@ -97,7 +98,7 @@ class FileController{
     async downloadFile(req, res) {
         try {
             const file = await File.findOne({_id: req.query.id, user: req.user.id});
-            const path = config.get('filePath') + '\\' + req.user.id + '\\' + file.path + '\\' + file.name;
+            const path = config.get('filePath') + '\\' + req.user.id + '\\' + file.path;
             if (fs.existsSync(path)) {
                 return res.download(path, file.name);
             }
@@ -105,6 +106,21 @@ class FileController{
         } catch (e) {
             console.log(e);
             res.status(500).json({message: "Download error"});
+        }
+    }
+
+    async deleteFile(req, res){
+        try{
+            const file = await File.findOne({_id: req.query.id, user: req.user.id});
+            if(!file){
+                return res.status(404).json({message: "Файл не найден"});
+            }
+            fileService.deleteFile(file);
+            await file.remove();
+            return res.json({message: "Файл был удален"});
+        } catch(e){
+            console.log(e);
+            return res.status(400).json({message: 'Директория не пуста'});
         }
     }
 }
